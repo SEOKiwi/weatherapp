@@ -1,0 +1,16 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ convertToDate({ dt: weatherDay.dt }) | date: dateFormat }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-3">
+            <b>Temperature</b><br />
+            Daytime: {{ convertToStandard({ daytimeTemp: weatherDay.temp.day }) }}<br />
+            Nighttime: {{ convertToStandard({ daytimeTemp: weatherDay.temp.night }) }}<br />
+        </div>
+        <div class="col-md-3">
+            {{weatherDay.weather[0].description}} <img src="http://openweathermap.org/img/w/{{weatherDay.weather[0].icon}}.png"></a>
+        </div>
+
+    </div>
+</div>
