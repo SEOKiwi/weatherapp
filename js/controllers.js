@@ -1,50 +1,51 @@
 // CONTROLLERS
-weatherApp.controller('homeController', ['$scope', '$cookieStore', '$location', 'cityService', function($scope, $cookieStore, $location, cityService) {
+weatherApp.controller('homeController',
+    ['$scope', '$location', '$cookieStore', 'cityService', 'weatherCalculations', 'weatherApi', 'geolocation',
+    function($scope, $location, $cookieStore, cityService, weatherCalculations, weatherApi, geolocation) {
 
-    $scope.city = cityService.city;
+        $scope.weatherResult = {};
+        $scope.days = 3;
+        $scope.showCurrentWeather = false;
+        $scope.city = cityService.city;
 
-    $scope.$watch('city', function() {
+        $scope.$watch('city', function() {
 
-        cityService.city = $scope.city;
+            cityService.city = $scope.city;
 
-    });
+        });
 
-    $scope.submit = function() {
-        $location.path('/forecast');
-    };
+        $scope.submit = function () {
+
+            $cookieStore.put('weatherAppCity', $scope.city);
+            $location.url('forecast');
+
+        }
+
+        $scope.calc = weatherCalculations;
+
+        // Get Client GEO Location
+        $scope.coords = {};
+        geolocation.getLocation().then(function(data){
+            $scope.coords = {lat:data.coords.latitude, long:data.coords.longitude};
+            if($scope.coords) {
+                $scope.weatherResult = weatherApi.getWeatherJson('', $scope.coords.lat, $scope.coords.long, $scope.days);
+                $scope.showCurrentWeather = true;
+            }
+        });
+
+
 
 }]);
 
 weatherApp.controller('forecastController',
-    ['$scope', '$resource', '$routeParams', '$cookieStore', 'cityService', 'weatherService',
-    function($scope, $resource, $routeParams, $cookieStore, cityService, weatherService) {
+    ['$scope', '$routeParams', 'cityService', 'weatherApi', 'weatherCalculations',
+    function($scope, $routeParams, cityService, weatherApi, weatherCalculations) {
 
-    // Declaration
+        $scope.city = cityService.city;
+        $scope.days = $routeParams.days;
 
-    $scope.city = cityService.city;
+        $scope.weatherResult = weatherApi.getWeatherJson($scope.city, '', '', $scope.days);
 
-    // Store the chosen city in Cookie to remember for reload
-    $cookieStore.put('weatherAppCity', $scope.city);
-
-
-
-    $scope.days = $routeParams.days || '2';
-
-    $scope.weatherResult = weatherService.GetWeather($scope.city, $scope.days);
-
-
-    // Functions
-
-    $scope.convertToCelsius = function(degK) {
-
-        return Math.round(degK - 273);
-
-    }
-
-    $scope.convertToDate = function(dt) {
-
-        return new Date(dt * 1000);
-
-    };
-
+        $scope.calc = weatherCalculations;
+        
 }]);

@@ -1,11 +1,30 @@
-<div class="row">
+<div class="panel">
     <div class="col-md-6 col-md-offset-3">
-        <h4>Forecast by City</h4>
+        <h3>Weather Forecast</h3>
         <form ng-submit="submit()">
             <div class="form-group">
-                <input id="cityInput" type="text" ng-model="city" class="form-control" ng-autocomplete select-on-click />
+                <input type="text" class="form-control" ng-model="city" ng-autocomplete select-input-value />
             </div>
-            <input type="submit" value="Get Forecast" class="btn btn-primary">
+            <input type="submit" class="btn btn-primary" value="Get Forecast" />
         </form>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <hr />
+        </div>
+    </div>
+    <div class="row" ng-show="showCurrentWeather" >
+        <div class="col-md-6 col-md-offset-3">
+            <h3><small>The weather at your Location:</small> {{ weatherResult.city.name }}</h3>
+        </div>
+    </div>
+
+    <div ng-repeat="w in weatherResult.list">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <weather-panel ng-show="showCurrentWeather" weather="w" calculate-date="calc.calculateDate(date)" calculate-temperature="calc.calculateTemperature(kelvin)"></weather-panel>
+            </div>
+        </div>
     </div>
 </div>

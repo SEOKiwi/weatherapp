@@ -1,0 +1,16 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ calculateDate({date: weather.dt}) | date: 'MMMM d, y' }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-3">
+            <b>Temperature</b><br />
+            Daytime: {{ calculateTemperature({kelvin: weather.temp.day}) }} °C<br />
+            Nighttime: {{ calculateTemperature({kelvin: weather.temp.night}) }} °C<br />
+        </div>
+        <div class="col-md-3">
+            {{weather.weather[0].description}} <img src="http://openweathermap.org/img/w/{{weather.weather[0].icon}}.png"></a>
+        </div>
+
+    </div>
+</div>
